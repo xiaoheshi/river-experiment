@@ -4,6 +4,8 @@
 
 - `com.river.experiment.kinselection`：亲缘选择实验，验证汉密尔顿法则下利他策略的演化优势。
 - `com.river.experiment.cooperation`：协同进化实验，引入多种合作/背叛策略、随机配对角色和细粒度统计。
+- `com.river.experiment.hawkdove`：鹰鸽冲突实验，展示资源争夺在高冲突成本下的混合均衡。
+- `com.river.experiment.publicgoods`：公共物品博弈，引入旁观者退出机制对抗搭便车行为。
 - `com.river.experiment.core`：统一的实验接口与报告抽象，方便后续扩展更多理论。
 
 ## 构建
@@ -28,6 +30,20 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
     -Dexec.mainClass=com.river.experiment.cooperation.CooperationApp exec:java
 ```
 
+鹰鸽冲突实验：
+
+```bash
+mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
+    -Dexec.mainClass=com.river.experiment.hawkdove.HawkDoveApp exec:java
+```
+
+公共物品博弈实验：
+
+```bash
+mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
+    -Dexec.mainClass=com.river.experiment.publicgoods.PublicGoodsApp exec:java
+```
+
 若终端出现中文乱码，可先执行 `chcp 65001` 切换到 UTF-8。
 
 ## 协同进化模块亮点
@@ -35,6 +51,11 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
 - 新增策略：在“永远合作/背叛、以牙还牙、宽容版以牙还牙、严厉惩罚者”基础上，引入“赢则守输则换”“怀疑型以牙还牙”“随机触发以牙还牙”等角色，覆盖更多现实行为模式。
 - 随机匹配：每种策略投放相同数量的角色，在多轮洗牌后两两对战，既保留随机性又保证参赛次数一致。
 - 统计升级：输出包含每场累计得分、折算到“每轮得分”、合作率/背叛率、互惠率、最好/最差成绩与标准差，便于深入分析策略稳定性。
+
+## 新增实验亮点
+
+- 鹰鸽冲突：复制器动力学展示高冲突成本下的混合均衡，输出鹰/鸽占比与收益差，可直接绘图解释 ESS。
+- 公共物品博弈：合作者、搭便车者与旁观者的三策略对抗，量化退出机制对合作率和群体收益的影响。
 
 ## 扩展建议
 
