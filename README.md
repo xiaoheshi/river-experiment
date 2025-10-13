@@ -23,6 +23,8 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
     -Dexec.mainClass=com.river.experiment.kinselection.KinSelectionApp exec:java
 ```
 
+运行结束后，可在 `articles/generated/kin-selection.md` 找到自动生成的稿件，配套配图位于 `articles/generated/assets/kin-selection/`。
+
 协同进化实验：
 
 ```bash

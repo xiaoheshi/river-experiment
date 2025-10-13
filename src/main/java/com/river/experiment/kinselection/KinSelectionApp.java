@@ -1,26 +1,59 @@
 package com.river.experiment.kinselection;
 
+import java.nio.file.Path;
+import java.util.List;
+
+import com.river.experiment.core.article.ArticleExportResult;
+import com.river.experiment.core.article.MarkdownArticleWriter;
+
 /**
- * 程序入口，负责运行亲缘选择模拟并打印汇总指标。
+ * 程序入口，负责运行亲缘选择模拟、输出关键日志，并生成适合公众号的 Markdown 文章与配图。
  */
 public final class KinSelectionApp {
 
     public static void main(String[] args) {
         SimulationParameters parameters = new SimulationParameters(
                 6000,     // 总人口数量
-                6,       // 每个家庭的成员数
-                1000,      // 模拟的代数
-                1.0,     // 基础适合度
-                2.4,     // 利他的亲属收益
-                0.8,     // 利他者自付成本
-                0.02,    // 策略突变率
-                0.5,     // 家庭内近亲相关系数（约等同兄弟姐妹）
-                0.25     // 初始利他者占比
+                6,        // 每个家庭的成员数
+                1000,     // 模拟的代数
+                1.0,      // 基础适合度
+                2.4,      // 利他的亲属收益
+                0.8,      // 利他者自付成本
+                0.02,     // 策略突变率
+                0.5,      // 家庭内近亲相关系数（约等同兄弟姐妹）
+                0.25      // 初始利他者占比
         );
 
-        KinSelectionSimulation simulation = new KinSelectionSimulation(parameters, 42L);
-        SimulationResult result = simulation.run();
+        KinSelectionExperiment experiment = new KinSelectionExperiment(parameters, 42L);
+        KinSelectionExperiment.KinSelectionReport report = experiment.run();
+        SimulationResult simulationResult = report.simulationResult();
 
+        printConsoleSummary(parameters, simulationResult);
+
+        Path articlesDirectory = Path.of("articles", "generated");
+        Path assetsRoot = articlesDirectory.resolve("assets");
+        try {
+            ArticleExportResult exportResult = MarkdownArticleWriter.write(
+                    articlesDirectory,
+                    experiment.id(),
+                    report,
+                    assetsRoot
+            );
+            System.out.println();
+            if (!exportResult.chartFiles().isEmpty()) {
+                System.out.println("图表输出：");
+                for (Path chart : exportResult.chartFiles()) {
+                    System.out.println("  " + chart.toAbsolutePath());
+                }
+            }
+            System.out.println("Markdown 文章：");
+            System.out.println("  " + exportResult.articlePath().toAbsolutePath());
+        } catch (Exception e) {
+            System.err.println("导出 Markdown 失败：" + e.getMessage());
+        }
+    }
+
+    private static void printConsoleSummary(SimulationParameters parameters, SimulationResult result) {
         System.out.println("亲缘选择模拟（验证汉密尔顿法则）");
         System.out.println("参数设定：");
         System.out.printf("  人口=%d, 家庭规模=%d, 代数=%d%n",
@@ -28,8 +61,10 @@ public final class KinSelectionApp {
         System.out.printf("  收益=%.2f, 成本=%.2f, 相关系数=%.2f, 突变率=%.2f%n",
                 parameters.benefit(), parameters.cost(), parameters.relatednessWithinFamily(), parameters.mutationRate());
 
-        for (GenerationStats stats : result.generations()) {
-            if (shouldPrintGeneration(stats, result)) {
+        List<GenerationStats> generations = result.generations();
+        int lastGenerationIndex = generations.size() - 1;
+        for (GenerationStats stats : generations) {
+            if (shouldPrintGeneration(stats, lastGenerationIndex)) {
                 printGeneration(stats);
             }
         }
@@ -48,8 +83,7 @@ public final class KinSelectionApp {
                 altruists.averageDirectFitness() - selfish.averageDirectFitness());
     }
 
-    private static boolean shouldPrintGeneration(GenerationStats stats, SimulationResult result) {
-        int lastGenerationIndex = result.generations().size() - 1;
+    private static boolean shouldPrintGeneration(GenerationStats stats, int lastGenerationIndex) {
         return stats.generation() == 0
                 || stats.generation() == lastGenerationIndex
                 || stats.generation() % 10 == 0;

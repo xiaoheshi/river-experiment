@@ -2,6 +2,8 @@ package com.river.experiment.kinselection;
 
 import com.river.experiment.core.Experiment;
 import com.river.experiment.core.ExperimentReport;
+import com.river.experiment.core.chart.ChartAttachment;
+import com.river.experiment.core.chart.ChartSeries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,7 @@ public final class KinSelectionExperiment implements Experiment<KinSelectionExpe
 
         return new KinSelectionReport(
                 parameters,
+                result,
                 firstGen,
                 finalGen,
                 takeoverGeneration.isPresent() ? takeoverGeneration.getAsInt() : -1,
@@ -77,6 +80,7 @@ public final class KinSelectionExperiment implements Experiment<KinSelectionExpe
     public static final class KinSelectionReport implements ExperimentReport {
 
         private final SimulationParameters parameters;
+        private final SimulationResult simulationResult;
         private final GenerationStats firstGeneration;
         private final GenerationStats finalGeneration;
         private final int takeoverGeneration;
@@ -84,12 +88,14 @@ public final class KinSelectionExperiment implements Experiment<KinSelectionExpe
         private final double directPenalty;
 
         KinSelectionReport(SimulationParameters parameters,
+                           SimulationResult simulationResult,
                            GenerationStats firstGeneration,
                            GenerationStats finalGeneration,
                            int takeoverGeneration,
                            double inclusiveAdvantage,
                            double directPenalty) {
             this.parameters = parameters;
+            this.simulationResult = simulationResult;
             this.firstGeneration = firstGeneration;
             this.finalGeneration = finalGeneration;
             this.takeoverGeneration = takeoverGeneration;
@@ -132,6 +138,75 @@ public final class KinSelectionExperiment implements Experiment<KinSelectionExpe
             paragraphs.add("· 包容适合度被用于生殖抽样，利他策略在短期内就能占据主导。");
             paragraphs.add("· 每 10 代的日志可直接转换成折线图，用以展示利他策略的扩张轨迹。");
             return paragraphs;
+        }
+
+        @Override
+        public List<ChartAttachment> charts() {
+            List<GenerationStats> generations = simulationResult.generations();
+            if (generations.isEmpty()) {
+                return List.of();
+            }
+
+            List<Double> generationIndex = new ArrayList<>(generations.size());
+            List<Double> altruistShare = new ArrayList<>(generations.size());
+            List<Double> selfishShare = new ArrayList<>(generations.size());
+            List<Double> altruistInclusive = new ArrayList<>(generations.size());
+            List<Double> selfishInclusive = new ArrayList<>(generations.size());
+            List<Double> altruistDirect = new ArrayList<>(generations.size());
+            List<Double> selfishDirect = new ArrayList<>(generations.size());
+
+            for (GenerationStats stats : generations) {
+                generationIndex.add((double) stats.generation());
+
+                StrategySnapshot altruistSnapshot = stats.snapshot(Strategy.ALTRUIST);
+                StrategySnapshot selfishSnapshot = stats.snapshot(Strategy.SELFISH);
+
+                altruistShare.add(percentage(stats.share(Strategy.ALTRUIST)));
+                selfishShare.add(percentage(stats.share(Strategy.SELFISH)));
+
+                altruistInclusive.add(altruistSnapshot.averageInclusiveFitness());
+                selfishInclusive.add(selfishSnapshot.averageInclusiveFitness());
+
+                altruistDirect.add(altruistSnapshot.averageDirectFitness());
+                selfishDirect.add(selfishSnapshot.averageDirectFitness());
+            }
+
+            return List.of(
+                    new ChartAttachment(
+                            "strategy-share.png",
+                            "利他者与自私者占比变化",
+                            "代数",
+                            "占比（%）",
+                            List.of(
+                                    ChartSeries.of("利他者占比", generationIndex, altruistShare),
+                                    ChartSeries.of("自私者占比", generationIndex, selfishShare)
+                            )
+                    ),
+                    new ChartAttachment(
+                            "inclusive-fitness.png",
+                            "包容适合度对比",
+                            "代数",
+                            "平均适合度",
+                            List.of(
+                                    ChartSeries.of("利他者包容适合度", generationIndex, altruistInclusive),
+                                    ChartSeries.of("自私者包容适合度", generationIndex, selfishInclusive)
+                            )
+                    ),
+                    new ChartAttachment(
+                            "direct-fitness.png",
+                            "直接适合度对比",
+                            "代数",
+                            "平均适合度",
+                            List.of(
+                                    ChartSeries.of("利他者直接适合度", generationIndex, altruistDirect),
+                                    ChartSeries.of("自私者直接适合度", generationIndex, selfishDirect)
+                            )
+                    )
+            );
+        }
+
+        public SimulationResult simulationResult() {
+            return simulationResult;
         }
 
         private static double percentage(double value) {

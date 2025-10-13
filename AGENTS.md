@@ -1,9 +1,12 @@
 # Repository Guidelines
 
+本项目使用 Java 实现多个经典演化实验，并产出适合发布于微信公众号的 Markdown 文章与配套图表，便于快速复述实验结论。
+
 ## 项目结构与模块组织
 - `pom.xml` 声明全部依赖与插件，`com.river.experiment.core` 保留共用的实验接口 `Experiment` 与报告抽象 `ExperimentReport`。
 - 各理论模块位于 `src/main/java/com/river/experiment/<domain>`，例如 `kinselection`、`cooperation`、`hawkdove`、`publicgoods`，分别提供入口类 `KinSelectionApp`、`CooperationApp`、`HawkDoveApp`、`PublicGoodsApp` 及模块内 `README.md` 用于记录假设与参数。
 - 文章草稿与实验说明存于 `articles/`，若调整仿真逻辑或输出，需要同步更新对应解读。
+- 自动导出的文章保存在 `articles/generated/<experiment-id>.md`，配图位于 `articles/generated/assets/<experiment-id>/`，可直接嵌入对应的微信公众号文章。
 
 ## 构建、测试与开发命令
 - `mvn -q -DskipTests package`：快速编译打包全部模块，提交前确保通过。
