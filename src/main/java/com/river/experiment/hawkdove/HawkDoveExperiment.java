@@ -2,6 +2,8 @@ package com.river.experiment.hawkdove;
 
 import com.river.experiment.core.Experiment;
 import com.river.experiment.core.ExperimentReport;
+import com.river.experiment.core.chart.ChartAttachment;
+import com.river.experiment.core.chart.ChartSeries;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -82,6 +84,18 @@ public final class HawkDoveExperiment implements Experiment<HawkDoveExperiment.H
             this.stabilizationGeneration = stabilizationGeneration;
         }
 
+        public SimulationParameters parameters() {
+            return parameters;
+        }
+
+        public double essShare() {
+            return essShare;
+        }
+
+        public int stabilizationGeneration() {
+            return stabilizationGeneration;
+        }
+
         @Override
         public String sectionTitle() {
             return "鹰鸽冲突：资源竞争下的混合均衡";
@@ -123,6 +137,63 @@ public final class HawkDoveExperiment implements Experiment<HawkDoveExperiment.H
             ));
             paragraphs.add("· 保留少量突变（1%）避免陷入边界解，便于观察均衡附近的自然波动，可直接绘制鹰派占比折线用于讲解。");
             return paragraphs;
+        }
+
+        @Override
+        public List<ChartAttachment> charts() {
+            List<GenerationState> generations = result.generations();
+            if (generations.isEmpty()) {
+                return List.of();
+            }
+
+            List<Double> generationIndex = new ArrayList<>(generations.size());
+            List<Double> hawkShareSeries = new ArrayList<>(generations.size());
+            List<Double> doveShareSeries = new ArrayList<>(generations.size());
+            List<Double> essShareSeries = new ArrayList<>(generations.size());
+            List<Double> hawkPayoffSeries = new ArrayList<>(generations.size());
+            List<Double> dovePayoffSeries = new ArrayList<>(generations.size());
+            List<Double> averagePayoffSeries = new ArrayList<>(generations.size());
+
+            for (GenerationState state : generations) {
+                generationIndex.add((double) state.generation());
+                hawkShareSeries.add(percentage(state.hawkShare()));
+                doveShareSeries.add(percentage(state.doveShare()));
+                essShareSeries.add(percentage(essShare));
+                hawkPayoffSeries.add(state.hawkPayoff());
+                dovePayoffSeries.add(state.dovePayoff());
+                averagePayoffSeries.add(state.averagePayoff());
+            }
+
+            return List.of(
+                    new ChartAttachment(
+                            "strategy-share.png",
+                            "鹰派与鸽派占比演化",
+                            "代数",
+                            "占比（%）",
+                            List.of(
+                                    ChartSeries.of("鹰派占比", generationIndex, hawkShareSeries),
+                                    ChartSeries.of("鸽派占比", generationIndex, doveShareSeries),
+                                    ChartSeries.of("理论均衡", generationIndex, essShareSeries)
+                            )
+                    ),
+                    new ChartAttachment(
+                            "strategy-payoff.png",
+                            "策略收益对比",
+                            "代数",
+                            "平均收益",
+                            List.of(
+                                    ChartSeries.of("鹰派收益", generationIndex, hawkPayoffSeries),
+                                    ChartSeries.of("鸽派收益", generationIndex, dovePayoffSeries)
+                            )
+                    ),
+                    new ChartAttachment(
+                            "average-payoff.png",
+                            "群体平均收益",
+                            "代数",
+                            "平均收益",
+                            List.of(ChartSeries.of("平均收益", generationIndex, averagePayoffSeries))
+                    )
+            );
         }
 
         private double percentage(double value) {

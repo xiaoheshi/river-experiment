@@ -32,6 +32,8 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
     -Dexec.mainClass=com.river.experiment.cooperation.CooperationApp exec:java
 ```
 
+生成的稿件位于 `articles/generated/cooperation-tournament.md`，策略/角色统计图表在 `articles/generated/assets/cooperation-tournament/`。
+
 鹰鸽冲突实验：
 
 ```bash
@@ -39,12 +41,16 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
     -Dexec.mainClass=com.river.experiment.hawkdove.HawkDoveApp exec:java
 ```
 
+自动生成的稿件位于 `articles/generated/hawk-dove.md`，配图位于 `articles/generated/assets/hawk-dove/`。
+
 公共物品博弈实验：
 
 ```bash
 mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
     -Dexec.mainClass=com.river.experiment.publicgoods.PublicGoodsApp exec:java
 ```
+
+对应文章输出在 `articles/generated/public-goods.md`，配图位于 `articles/generated/assets/public-goods/`。
 
 若终端出现中文乱码，可先执行 `chcp 65001` 切换到 UTF-8。
 

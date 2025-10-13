@@ -10,3 +10,5 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" \
 ```
 
 模型输出每代策略占比与平均收益，可据此绘制合作率/收益曲线，对比有无旁观者退出选项下的差异。
+
+程序会自动在 `articles/generated/public-goods.md` 生成文章草稿，并在 `articles/generated/assets/public-goods/` 输出策略占比与收益图表。

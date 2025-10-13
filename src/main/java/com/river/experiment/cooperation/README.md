@@ -37,6 +37,8 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" ^
 
 若出现中文乱码，可先执行 `chcp 65001`。
 
+运行结束后，将在 `articles/generated/cooperation-tournament.md` 导出 Markdown 稿件，并在 `articles/generated/assets/cooperation-tournament/` 输出策略排名、合作率与角色得分的图表，可直接嵌入公众号。
+
 ## 可调参数
 
 在 `CooperationExperiment` 或 `CooperationTournament` 中调整：

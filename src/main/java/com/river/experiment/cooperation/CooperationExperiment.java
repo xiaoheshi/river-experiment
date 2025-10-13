@@ -2,6 +2,8 @@ package com.river.experiment.cooperation;
 
 import com.river.experiment.core.Experiment;
 import com.river.experiment.core.ExperimentReport;
+import com.river.experiment.core.chart.ChartAttachment;
+import com.river.experiment.core.chart.ChartSeries;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -98,6 +100,14 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
             this.result = result;
             this.agentsPerStrategy = agentsPerStrategy;
             this.encounterRounds = encounterRounds;
+        }
+
+        public MatchSettings settings() {
+            return settings;
+        }
+
+        public TournamentResult tournamentResult() {
+            return result;
         }
 
         @Override
@@ -198,6 +208,56 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
             ));
 
             return paragraphs;
+        }
+
+        @Override
+        public List<ChartAttachment> charts() {
+            List<StrategyPerformance> strategyRankings = result.strategyPerformances();
+            if (strategyRankings.isEmpty()) {
+                return List.of();
+            }
+
+            List<Double> strategyRankIndex = new ArrayList<>(strategyRankings.size());
+            List<Double> meanScorePerRound = new ArrayList<>(strategyRankings.size());
+            List<Double> cooperationRate = new ArrayList<>(strategyRankings.size());
+            for (int i = 0; i < strategyRankings.size(); i++) {
+                StrategyPerformance performance = strategyRankings.get(i);
+                strategyRankIndex.add((double) (i + 1));
+                meanScorePerRound.add(performance.meanScorePerRound(settings.rounds()));
+                cooperationRate.add(performance.meanCooperationRate() * 100);
+            }
+
+            List<AgentPerformance> agents = result.agentPerformances();
+            List<Double> agentRankIndex = new ArrayList<>(agents.size());
+            List<Double> agentScore = new ArrayList<>(agents.size());
+            for (int i = 0; i < agents.size(); i++) {
+                agentRankIndex.add((double) (i + 1));
+                agentScore.add(agents.get(i).meanScore());
+            }
+
+            return List.of(
+                    new ChartAttachment(
+                            "strategy-score-per-round.png",
+                            "策略排名与场均得分",
+                            "策略排名",
+                            "场均得分",
+                            List.of(ChartSeries.of("场均得分", strategyRankIndex, meanScorePerRound))
+                    ),
+                    new ChartAttachment(
+                            "strategy-cooperation-rate.png",
+                            "策略合作率走势",
+                            "策略排名",
+                            "合作率（%）",
+                            List.of(ChartSeries.of("平均合作率", strategyRankIndex, cooperationRate))
+                    ),
+                    new ChartAttachment(
+                            "agent-score.png",
+                            "角色得分分布",
+                            "角色排名",
+                            "累计得分",
+                            List.of(ChartSeries.of("累计得分", agentRankIndex, agentScore))
+                    )
+            );
         }
 
         private String formatAgentLine(int rankWithinStrategy, AgentPerformance performance) {

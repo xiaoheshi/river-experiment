@@ -10,3 +10,5 @@ mvn -q "-DskipTests" "-Dfile.encoding=UTF-8" \
 ```
 
 输出包含各代鹰派/鸽派占比、单次冲突的收益差、以及收敛到混合均衡的代数，可直接转换为折线图辅助教学。
+
+运行后将在 `articles/generated/hawk-dove.md` 生成讲稿，并在 `articles/generated/assets/hawk-dove/` 输出占比与收益曲线图。

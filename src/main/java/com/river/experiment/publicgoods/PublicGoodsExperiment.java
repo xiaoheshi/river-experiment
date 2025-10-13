@@ -2,6 +2,8 @@ package com.river.experiment.publicgoods;
 
 import com.river.experiment.core.Experiment;
 import com.river.experiment.core.ExperimentReport;
+import com.river.experiment.core.chart.ChartAttachment;
+import com.river.experiment.core.chart.ChartSeries;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -88,6 +90,18 @@ public final class PublicGoodsExperiment implements Experiment<PublicGoodsExperi
             this.suppressionGeneration = suppressionGeneration;
         }
 
+        public PublicGoodsParameters parameters() {
+            return parameters;
+        }
+
+        public PublicGoodsGeneration peakGeneration() {
+            return peak;
+        }
+
+        public int suppressionGeneration() {
+            return suppressionGeneration;
+        }
+
         @Override
         public String sectionTitle() {
             return "公共物品博弈：合作、搭便车与退出的动态平衡";
@@ -135,6 +149,66 @@ public final class PublicGoodsExperiment implements Experiment<PublicGoodsExperi
             ));
             paragraphs.add("· 旁观者提供“退出选项”，在噪声与突变下维持少量比例，缓冲搭便车者的扩散，可用于演示制度化惩罚之外的自组织机制。");
             return paragraphs;
+        }
+
+        @Override
+        public List<ChartAttachment> charts() {
+            List<PublicGoodsGeneration> generations = result.generations();
+            if (generations.isEmpty()) {
+                return List.of();
+            }
+
+            List<Double> generationIndex = new ArrayList<>(generations.size());
+            List<Double> cooperatorShare = new ArrayList<>(generations.size());
+            List<Double> defectorShare = new ArrayList<>(generations.size());
+            List<Double> lonerShare = new ArrayList<>(generations.size());
+            List<Double> cooperatorPayoff = new ArrayList<>(generations.size());
+            List<Double> defectorPayoff = new ArrayList<>(generations.size());
+            List<Double> lonerPayoff = new ArrayList<>(generations.size());
+            List<Double> populationPayoff = new ArrayList<>(generations.size());
+
+            for (PublicGoodsGeneration generation : generations) {
+                generationIndex.add((double) generation.generation());
+                cooperatorShare.add(percentage(generation.cooperatorShare()));
+                defectorShare.add(percentage(generation.defectorShare()));
+                lonerShare.add(percentage(generation.lonerShare()));
+                cooperatorPayoff.add(generation.cooperatorPayoff());
+                defectorPayoff.add(generation.defectorPayoff());
+                lonerPayoff.add(generation.lonerPayoff());
+                populationPayoff.add(generation.populationPayoff());
+            }
+
+            return List.of(
+                    new ChartAttachment(
+                            "strategy-share.png",
+                            "策略占比演化",
+                            "代数",
+                            "占比（%）",
+                            List.of(
+                                    ChartSeries.of("合作者", generationIndex, cooperatorShare),
+                                    ChartSeries.of("搭便车者", generationIndex, defectorShare),
+                                    ChartSeries.of("旁观者", generationIndex, lonerShare)
+                            )
+                    ),
+                    new ChartAttachment(
+                            "strategy-payoff.png",
+                            "策略收益对比",
+                            "代数",
+                            "平均收益",
+                            List.of(
+                                    ChartSeries.of("合作者收益", generationIndex, cooperatorPayoff),
+                                    ChartSeries.of("搭便车者收益", generationIndex, defectorPayoff),
+                                    ChartSeries.of("旁观者收益", generationIndex, lonerPayoff)
+                            )
+                    ),
+                    new ChartAttachment(
+                            "population-payoff.png",
+                            "群体平均收益",
+                            "代数",
+                            "平均收益",
+                            List.of(ChartSeries.of("平均收益", generationIndex, populationPayoff))
+                    )
+            );
         }
 
         private double percentage(double value) {
