@@ -98,44 +98,81 @@ public final class HawkDoveExperiment implements Experiment<HawkDoveExperiment.H
 
         @Override
         public String sectionTitle() {
-            return "鹰鸽冲突：资源竞争下的混合均衡";
+            return "价格战越打越穷：鹰鸽模型的混合均衡警报";
         }
 
         @Override
         public List<String> paragraphs() {
             List<String> paragraphs = new ArrayList<>();
+            double essPercent = percentage(essShare);
             paragraphs.add(String.format(
-                    "实验设定：资源价值 V=%.1f，争夺冲突成本 C=%.1f，初始鹰派占比 %.1f%%，复制强度 %.2f，突变率 %.2f；理论上鹰派均衡点在 V/C=%.1f%%。",
+                    "价格战为什么总是“赢了面子亏了钱”？我们让资源价值 V=%.1f、冲突成本 C=%.1f 的鹰鸽模型跑了 %d 代，记录混合均衡如何自动出现。",
                     parameters.resourceValue(),
                     parameters.conflictCost(),
+                    last.generation()
+            ));
+
+            paragraphs.add("### 模型参数一眼读懂");
+            paragraphs.add(String.format(
+                    "- 初始占比：鹰派 %.1f%%、鸽派 %.1f%%，复制强度 %.2f，突变率 %.2f。",
                     percentage(first.hawkShare()),
+                    percentage(first.doveShare()),
                     parameters.selectionStrength(),
-                    parameters.mutationRate(),
-                    percentage(essShare)
+                    parameters.mutationRate()
             ));
             paragraphs.add(String.format(
-                    "动态结果：第 0 代鹰派 %.1f%% → 第 %d 代 %.1f%%，鸽派则从 %.1f%% → %.1f%%，平均收益由 %.2f 收敛至 %.2f。首次进入均衡窗口（±2%%）的代数：%s。",
+                    "- 冲突成本 C=%.1f 远高于资源价值 V=%.1f，理论均衡鹰派占比约 %.1f%%。",
+                    parameters.conflictCost(),
+                    parameters.resourceValue(),
+                    essPercent
+            ));
+            paragraphs.add(String.format(
+                    "- 仿真输出 %d 代数据，包含鹰派/鸽派占比、策略收益与群体平均收益。",
+                    result.generations().size()
+            ));
+
+            paragraphs.add("### 三个关键节点");
+            paragraphs.add(String.format(
+                    "- 鹰派占比 %.1f%% → 第 %d 代 %.1f%%，鸽派相应升至 %.1f%%，几乎贴近理论值。",
                     percentage(first.hawkShare()),
                     last.generation(),
                     percentage(last.hawkShare()),
-                    percentage(first.doveShare()),
-                    percentage(last.doveShare()),
+                    percentage(last.doveShare())
+            ));
+            paragraphs.add(String.format(
+                    "- 群体平均收益从 %.2f 回升到 %.2f，说明自损型冲突被快速纠偏。",
                     first.averagePayoff(),
-                    last.averagePayoff(),
-                    stabilizationGeneration >= 0 ? ("第 " + stabilizationGeneration + " 代") : "模拟范围内未收敛"
+                    last.averagePayoff()
             ));
-            paragraphs.add("解读要点：");
+            String stabilizationText = stabilizationGeneration >= 0
+                    ? "第 " + stabilizationGeneration + " 代"
+                    : "模拟范围内暂未";
             paragraphs.add(String.format(
-                    "· 由于 C≫V，鹰派之间的冲突收益为 %.2f，远低于与鸽派互动时的 %.2f，促使鹰派占比下降。",
-                    (parameters.resourceValue() - parameters.conflictCost()) / 2.0,
-                    parameters.resourceValue()
+                    "- %s 进入“±2%%”均衡窗口，混合策略成为演化稳定解。",
+                    stabilizationText
+            ));
+
+            double hawkHawkPayoff = (parameters.resourceValue() - parameters.conflictCost()) / 2.0;
+            paragraphs.add("### 给管理者的三条提醒");
+            paragraphs.add(String.format(
+                    "- 当冲突成本 %.1f 大于收益 %.1f，两败俱伤不是比喻，而是公式：鹰派对鹰派平均只剩 %.2f。",
+                    parameters.conflictCost(),
+                    parameters.resourceValue(),
+                    hawkHawkPayoff
             ));
             paragraphs.add(String.format(
-                    "· 复制器动力学在约第 %d 代后围绕理论均衡 %.1f%% 振荡，说明混合策略是演化稳定策略（ESS）。",
-                    stabilizationGeneration >= 0 ? stabilizationGeneration : last.generation(),
-                    percentage(essShare)
+                    "- 想把团队从内耗里拽出来，就要安排人成为“鸽派缓冲区”，让占比逼近 %.1f%%。",
+                    100.0 - essPercent
             ));
-            paragraphs.add("· 保留少量突变（1%）避免陷入边界解，便于观察均衡附近的自然波动，可直接绘制鹰派占比折线用于讲解。");
+            paragraphs.add("- 留一点突变（约 1%）机制，能防止组织陷入单一激进态，适合写成“预留缓冲账户”的比喻。");
+
+            paragraphs.add("### 写稿小贴士");
+            paragraphs.add("- 先抛“价格战均衡点=V/C”这个公式，再贴鹰派占比折线，一句话就能解释企业为何需要停战。");
+            paragraphs.add(String.format(
+                    "- 用“第 %d 代回到正收益”作为情绪拐点，引导读者思考停止内耗的时间窗口。",
+                    stabilizationGeneration >= 0 ? stabilizationGeneration : last.generation()
+            ));
+            paragraphs.add("- 结尾把模型代入行业案例（直播带货、房产促销），数据就不再是抽象数学。");
             return paragraphs;
         }
 

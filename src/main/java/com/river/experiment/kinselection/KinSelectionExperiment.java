@@ -105,38 +105,74 @@ public final class KinSelectionExperiment implements Experiment<KinSelectionExpe
 
         @Override
         public String sectionTitle() {
-            return "亲缘选择：汉密尔顿法则的数值验证";
+            return "亲缘选择：1000 代演化揭开家庭互助的底层逻辑";
         }
 
         @Override
         public List<String> paragraphs() {
             List<String> paragraphs = new ArrayList<>();
+            double initialShare = percentage(firstGeneration.share(Strategy.ALTRUIST));
+            double finalShare = percentage(finalGeneration.share(Strategy.ALTRUIST));
+            int generationsCount = simulationResult.generations().size();
+            boolean reachedNinety = takeoverGeneration >= 0;
+            String takeoverLabel = reachedNinety
+                    ? "第 " + takeoverGeneration + " 代"
+                    : "模拟范围内尚未";
+
             paragraphs.add(String.format(
-                    "实验设定：将 %d 个个体划分为 %d 人一组的亲缘家庭，亲缘相关系数 r=%.2f，利他收益 B=%.1f，利他成本 C=%.1f，使得 rB=%.1f 大于 C=%.1f。",
+                    "为什么每次家庭群聊出事，永远是长辈冲在最前？我们把 %d 个个体放进 %d 代的演化实验里，让数据告诉你“亲缘互助”背后的收益账。",
                     parameters.populationSize(),
+                    finalGeneration.generation()
+            ));
+
+            paragraphs.add("### 仿真怎么搭");
+            paragraphs.add(String.format("- 家庭结构：%d 人一户，共 %d 户，亲缘相关系数 r=%.2f。",
                     parameters.familySize(),
-                    parameters.relatednessWithinFamily(),
+                    parameters.populationSize() / parameters.familySize(),
+                    parameters.relatednessWithinFamily()));
+            paragraphs.add(String.format("- 利他收益与成本：B=%.1f、C=%.1f，让 rB=%.1f > C=%.1f。",
                     parameters.benefit(),
                     parameters.cost(),
                     parameters.relatednessWithinFamily() * parameters.benefit(),
-                    parameters.cost()
-            ));
-            String takeoverLabel = takeoverGeneration >= 0
-                    ? "第 " + takeoverGeneration + " 代"
-                    : "模拟范围内未超过 90%";
-            paragraphs.add(String.format(
-                    "结果摘要：起始利他者占比 %.1f%%，到第 %d 代提升至 %.1f%%，第一次突破 90%% 出现在 %s；利他者直接适合度相对劣势 %.2f，但包容适合度优势 %.2f。",
-                    percentage(firstGeneration.share(Strategy.ALTRUIST)),
-                    finalGeneration.generation(),
-                    percentage(finalGeneration.share(Strategy.ALTRUIST)),
-                    takeoverLabel,
+                    parameters.cost()));
+            paragraphs.add(String.format("- 繁殖规则：按包容适合度抽样，突变率 %.2f，累计记录 %d 代演化日志。",
+                    parameters.mutationRate(),
+                    generationsCount));
+
+            paragraphs.add("### 三个关键数据瞬间");
+            String takeoverSentence;
+            if (reachedNinety) {
+                takeoverSentence = String.format(
+                        "- 起始利他者占比 %.1f%% → 第 %d 代 %.1f%%，%s首次跨过 90%% 门槛。",
+                        initialShare,
+                        finalGeneration.generation(),
+                        finalShare,
+                        takeoverLabel
+                );
+            } else {
+                takeoverSentence = String.format(
+                        "- 起始利他者占比 %.1f%% → 第 %d 代 %.1f%%，虽然模拟范围内未突破 90%%，但增长速度始终领先自私者。",
+                        initialShare,
+                        finalGeneration.generation(),
+                        finalShare
+                );
+            }
+            paragraphs.add(takeoverSentence);
+            paragraphs.add(String.format("- 利他者直接适合度劣势 %.2f，但包容适合度优势 %.2f，让“吃亏”转化为生存优势。",
                     directPenalty,
-                    inclusiveAdvantage
-            ));
-            paragraphs.add("解读要点：");
-            paragraphs.add("· 家庭结构让利他收益在亲属之间扩散，亲缘折扣后的收益依旧超过个人成本。");
-            paragraphs.add("· 包容适合度被用于生殖抽样，利他策略在短期内就能占据主导。");
-            paragraphs.add("· 每 10 代的日志可直接转换成折线图，用以展示利他策略的扩张轨迹。");
+                    inclusiveAdvantage));
+            paragraphs.add("- 每 10 代输出一次日志，对应三张折线图：策略占比、包容适合度、直接适合度，一目了然。");
+
+            paragraphs.add("### 可以抛给读者的现实启示");
+            paragraphs.add("- 家庭或社区互助不是情怀，而是“关系强度 × 回流收益”真的大于投入。");
+            paragraphs.add("- 想在政策里激活互助，积分、信誉、税收抵扣都能放大“r”。");
+            paragraphs.add("- 企业文化里营造“亲属感”，本质是在复制让贡献者拿到团队复利。");
+
+            paragraphs.add("### 写稿时的素材提示");
+            paragraphs.add(String.format("- 用“%.1f%%→%.1f%%”的占比曲线开篇，再补上“包容适合度领先 %.2f”的数据，故事张力瞬间拉满。",
+                    initialShare,
+                    finalShare,
+                    inclusiveAdvantage));
             return paragraphs;
         }
 

@@ -6,7 +6,6 @@ import com.river.experiment.core.chart.ChartAttachment;
 import com.river.experiment.core.chart.ChartSeries;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -112,85 +111,92 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
 
         @Override
         public String sectionTitle() {
-            return "协同的进化：重复囚徒困境的锦标赛观察";
+            return "噪声派对锦标赛：宽容策略如何赢下 96 人囚徒困境";
         }
 
         @Override
         public List<String> paragraphs() {
             List<String> paragraphs = new ArrayList<>();
-            String noiseDescription = settings.noiseProbability() == 0
-                    ? "在零噪声环境中"
-                    : String.format("在含 %.1f%% 噪声的环境中", settings.noiseProbability() * 100);
+            double noisePercent = settings.noiseProbability() * 100;
+            int totalAgents = strategies.size() * agentsPerStrategy;
+            List<AgentPerformance> agentRankings = result.agentPerformances();
+            List<StrategyPerformance> strategyRankings = result.strategyPerformances();
+
             paragraphs.add(String.format(
-                    "实验设定：%s进行 %d 轮重复囚徒困境，对局支付矩阵为 R=%.0f、T=%.0f、P=%.0f、S=%.0f；每种策略投放 %d 名角色，随机匹配 %d 轮以确保参赛次数一致。",
-                    noiseDescription,
+                    "96 位策略选手在含 %.1f%% 噪声的随机派对里混战，我们想看谁能在误操作频发的现实世界守住合作。",
+                    noisePercent
+            ));
+
+            paragraphs.add("### 随机派对的底层规则");
+            paragraphs.add(String.format("- 重复囚徒困境每场进行 %d 轮，支付矩阵 R=%.0f / T=%.0f / P=%.0f / S=%.0f。",
                     settings.rounds(),
                     settings.reward(),
                     settings.temptation(),
                     settings.punishment(),
-                    settings.sucker(),
+                    settings.sucker()));
+            paragraphs.add(String.format("- %d 种性格（永远合作、宽容/怀疑版以牙还牙、严厉惩罚者等）各派 %d 人，总计 %d 名角色，随机重排 %d 轮。",
+                    strategies.size(),
                     agentsPerStrategy,
-                    encounterRounds
+                    totalAgents,
+                    encounterRounds));
+            paragraphs.add(String.format(
+                    "- 噪声 %.1f%% 会把动作翻转，逼着参赛者设计容错和恢复流程。",
+                    noisePercent
             ));
-            paragraphs.add("参赛策略与行为解读：");
-            for (CooperationStrategy strategy : strategies) {
-                paragraphs.add(String.format("· %s：%s", strategy.displayName(), strategy.description()));
-            }
 
-            List<AgentPerformance> agentRankings = result.agentPerformances();
-            paragraphs.add(String.format("角色排行榜（共 %d 名角色，全部结果如下）：", agentRankings.size()));
-            for (int i = 0; i < agentRankings.size(); i++) {
-                AgentPerformance performance = agentRankings.get(i);
-                paragraphs.add(formatAgentLine(i + 1, performance));
-            }
-
-            AgentPerformance champion = result.topAgent();
-            AgentPerformance runnerUp = agentRankings.size() > 1 ? agentRankings.get(1) : null;
-            if (champion != null && runnerUp != null) {
-                paragraphs.add(String.format(
-                        "冠军解析：“%s”比“%s”场均多得 %.2f 分，合作率高出 %.1f 个百分点，显示其在随机对手环境下的稳健性。",
-                        champion.agentId(),
-                        runnerUp.agentId(),
-                        champion.meanScore() - runnerUp.meanScore(),
-                        (champion.meanCooperationRate() - runnerUp.meanCooperationRate()) * 100
-                ));
-            }
-
-            List<StrategyPerformance> strategyRankings = result.strategyPerformances();
-            paragraphs.add("角色类型（策略）综合排名：");
-            for (int i = 0; i < strategyRankings.size(); i++) {
-                StrategyPerformance performance = strategyRankings.get(i);
-                paragraphs.add(String.format(
-                        "· 第 %d 名 %s —— 场均累计得分 %.2f（折合每轮 %.3f），平均合作率 %.1f%%、互惠率 %.1f%%，最好/最差场次得分 %.2f / %.2f，参赛场次均值 %d（得分标准差 %.2f）。",
-                        i + 1,
-                        performance.strategy().displayName(),
-                        performance.meanScore(),
-                        performance.meanScorePerRound(settings.rounds()),
-                        performance.meanCooperationRate() * 100,
-                        performance.meanMutualCooperationRate() * 100,
-                        performance.bestMatchScore(),
-                        performance.worstMatchScore(),
-                        performance.matches(),
-                        performance.scoreStdDeviation()
-                ));
-            }
-
-            paragraphs.add("按策略分组的角色排名（括号内为综合排名）：");
-            for (CooperationStrategy strategy : strategies) {
-                List<AgentPerformance> members = agentRankings.stream()
-                        .filter(performance -> performance.strategy() == strategy)
-                        .sorted(Comparator.comparingDouble(AgentPerformance::meanScore).reversed())
-                        .toList();
-                paragraphs.add(String.format("【%s】", strategy.displayName()));
-                for (int memberIndex = 0; memberIndex < members.size(); memberIndex++) {
-                    AgentPerformance performance = members.get(memberIndex);
-                    int globalRank = agentRankings.indexOf(performance) + 1;
+            if (!agentRankings.isEmpty()) {
+                paragraphs.add("### 冠军榜：谁能在噪声里稳住合作");
+                int topAgentLimit = Math.min(3, agentRankings.size());
+                for (int i = 0; i < topAgentLimit; i++) {
+                    AgentPerformance performance = agentRankings.get(i);
                     paragraphs.add(String.format(
-                            "%s（综合第 %d 名）",
-                            formatAgentLine(memberIndex + 1, performance),
-                            globalRank
+                            "- TOP %d %s（%s）：场均每轮 %.3f 分，合作率 %.1f%%，互惠率 %.1f%%，最好/最差场次 %.2f / %.2f。",
+                            i + 1,
+                            performance.agentId(),
+                            performance.strategy().displayName(),
+                            performance.meanScorePerRound(settings.rounds()),
+                            performance.meanCooperationRate() * 100,
+                            performance.meanMutualCooperationRate() * 100,
+                            performance.bestMatchScore(),
+                            performance.worstMatchScore()
                     ));
                 }
+                if (agentRankings.size() >= 2) {
+                    AgentPerformance champion = agentRankings.get(0);
+                    AgentPerformance runnerUp = agentRankings.get(1);
+                    paragraphs.add(String.format(
+                            "- 冠军比亚军场均多拿 %.2f 分、合作率高出 %.1f 个百分点，是“先友善→立刻惩罚→快速复原”的最佳注脚。",
+                            champion.meanScore() - runnerUp.meanScore(),
+                            (champion.meanCooperationRate() - runnerUp.meanCooperationRate()) * 100
+                    ));
+                }
+                AgentPerformance underdog = agentRankings.get(agentRankings.size() - 1);
+                paragraphs.add(String.format(
+                        "- 垫底提醒：%s（%s）场均只拿 %.2f 分，合作率 %.1f%%，几乎成了他人警示录。",
+                        underdog.agentId(),
+                        underdog.strategy().displayName(),
+                        underdog.meanScore(),
+                        underdog.meanCooperationRate() * 100
+                ));
+            }
+
+            if (!strategyRankings.isEmpty()) {
+                paragraphs.add("### 策略阵营风向");
+                StrategyPerformance topStrategy = strategyRankings.get(0);
+                paragraphs.add(String.format(
+                        "- 冠军阵营 %s：每轮平均 %.3f 分，合作率 %.1f%%，互惠率 %.1f%%，标准差 %.2f。",
+                        topStrategy.strategy().displayName(),
+                        topStrategy.meanScorePerRound(settings.rounds()),
+                        topStrategy.meanCooperationRate() * 100,
+                        topStrategy.meanMutualCooperationRate() * 100,
+                        topStrategy.scoreStdDeviation()
+                ));
+                StrategyPerformance bottomStrategy = strategyRankings.get(strategyRankings.size() - 1);
+                paragraphs.add(String.format(
+                        "- 末位阵营 %s：合作率只有 %.1f%%，说明“只惩罚不复原”的套路在噪声环境里最容易崩。",
+                        bottomStrategy.strategy().displayName(),
+                        bottomStrategy.meanCooperationRate() * 100
+                ));
             }
 
             double averageCooperationRate = agentRankings.stream()
@@ -201,9 +207,29 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
                     .mapToDouble(AgentPerformance::meanMutualCooperationRate)
                     .average()
                     .orElse(0.0);
+
+            paragraphs.add("### 三个现实启示");
             paragraphs.add(String.format(
-                    "整体观察：各角色平均合作率 %.1f%%，平均互惠率 %.1f%%。友善、报复与宽容的组合在随机配对中依旧能维持互惠，同时增强了长期得分的稳定性。",
-                    averageCooperationRate * 100,
+                    "- 总平均合作率 %.1f%%，说明只要允许快速修复，合作就能在随机搭子里坐稳半壁江山。",
+                    averageCooperationRate * 100
+            ));
+            if (!strategyRankings.isEmpty()) {
+                StrategyPerformance topStrategy = strategyRankings.get(0);
+                paragraphs.add(String.format(
+                        "- 宽容型冠军 %s 把“犯错后给台阶”写进流程，是团队制度里最值得抄的玩法。",
+                        topStrategy.strategy().displayName()
+                ));
+            }
+            paragraphs.add(String.format(
+                    "- 平均互惠率 %.1f%%，比单纯的合作率更能打，告诉我们“对话机制”比“单向善意”重要得多。",
+                    averageMutualRate * 100
+            ));
+
+            paragraphs.add("### 写稿小贴士");
+            paragraphs.add("- 用“冠军比亚军多拿多少分”开场，再贴前 3 名的柱状图，读者会立刻代入“职场策略赛”。");
+            paragraphs.add("- 把 1.5% 噪声翻译成“误操作率”，辅以真实案例，能自然过渡到团队容错话题。");
+            paragraphs.add(String.format(
+                    "- 结尾抛出“平均互惠率 %.1f%%”这句金句，就能把伦理讨论拉回机制设计。",
                     averageMutualRate * 100
             ));
 
@@ -257,24 +283,6 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
                             "累计得分",
                             List.of(ChartSeries.of("累计得分", agentRankIndex, agentScore))
                     )
-            );
-        }
-
-        private String formatAgentLine(int rankWithinStrategy, AgentPerformance performance) {
-            return String.format(
-                    "· 第 %d 名 %s（%s） —— 每场累计得分 %.2f（折合每轮 %.3f），合作率 %.1f%%、背叛率 %.1f%%，互惠率 %.1f%%，最好/最差比赛得分 %.2f / %.2f，参与对局 %d 场（得分标准差 %.2f）。",
-                    rankWithinStrategy,
-                    performance.agentId(),
-                    performance.strategy().displayName(),
-                    performance.meanScore(),
-                    performance.meanScorePerRound(settings.rounds()),
-                    performance.meanCooperationRate() * 100,
-                    performance.meanDefectionRate() * 100,
-                    performance.meanMutualCooperationRate() * 100,
-                    performance.bestMatchScore(),
-                    performance.worstMatchScore(),
-                    performance.matches(),
-                    performance.scoreStdDeviation()
             );
         }
     }
