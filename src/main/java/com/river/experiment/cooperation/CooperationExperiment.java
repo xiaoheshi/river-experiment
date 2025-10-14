@@ -122,30 +122,38 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
             List<AgentPerformance> agentRankings = result.agentPerformances();
             List<StrategyPerformance> strategyRankings = result.strategyPerformances();
 
+            paragraphs.add("### 爆款开场：误操作频发的团队还能撑住合作吗？");
             paragraphs.add(String.format(
-                    "96 位策略选手在含 %.1f%% 噪声的随机派对里混战，我们想看谁能在误操作频发的现实世界守住合作。",
+                    "想象一场 96 人的跨部门协作大会：语音延迟、按钮误触、消息误读——平均 %.1f%% 的动作都会被“噪声”翻转。谁能在这样的高压环境里带队冲破囚徒困境？这篇稿件给你现成答案。",
                     noisePercent
             ));
 
-            paragraphs.add("### 随机派对的底层规则");
-            paragraphs.add(String.format("- 重复囚徒困境每场进行 %d 轮，支付矩阵 R=%.0f / T=%.0f / P=%.0f / S=%.0f。",
+            paragraphs.add("### 为什么读者会停下滑动");
+            paragraphs.add("- 现实共鸣：远程协作、开源项目、联盟营销每天都在随机匹配新的搭子。");
+            paragraphs.add("- 情绪冲突：宽容者居然能打败永远合作的老好人？数据会颠覆直觉。");
+            paragraphs.add("- 传播价值：结尾提供团队治理模板，适合配图扩散到管理、社科号。");
+
+            paragraphs.add("### 实验怎么搭，才能讲得有说服力");
+            paragraphs.add(String.format(
+                    "- 对局：每场 %d 轮重复囚徒困境，支付矩阵 R=%.0f / T=%.0f / P=%.0f / S=%.0f，保证“犯错成本”远高于“守序收益”。",
                     settings.rounds(),
                     settings.reward(),
                     settings.temptation(),
                     settings.punishment(),
                     settings.sucker()));
-            paragraphs.add(String.format("- %d 种性格（永远合作、宽容/怀疑版以牙还牙、严厉惩罚者等）各派 %d 人，总计 %d 名角色，随机重排 %d 轮。",
+            paragraphs.add(String.format(
+                    "- 参赛阵容：%d 种性格（从永远合作到严厉惩罚者）各派 %d 人，总计 %d 名角色，随机重排 %d 轮，让每个人都遇到足够多的陌生队友。",
                     strategies.size(),
                     agentsPerStrategy,
                     totalAgents,
                     encounterRounds));
             paragraphs.add(String.format(
-                    "- 噪声 %.1f%% 会把动作翻转，逼着参赛者设计容错和恢复流程。",
+                    "- 噪声机制：%.1f%% 的动作被强制翻转，模拟误操作、会议延迟或情绪失控，逼策略设计“容错恢复”方案。",
                     noisePercent
             ));
 
             if (!agentRankings.isEmpty()) {
-                paragraphs.add("### 冠军榜：谁能在噪声里稳住合作");
+                paragraphs.add("### 数据剧情：冠军凭什么赢、谁又跌出局");
                 int topAgentLimit = Math.min(3, agentRankings.size());
                 for (int i = 0; i < topAgentLimit; i++) {
                     AgentPerformance performance = agentRankings.get(i);
@@ -164,10 +172,13 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
                 if (agentRankings.size() >= 2) {
                     AgentPerformance champion = agentRankings.get(0);
                     AgentPerformance runnerUp = agentRankings.get(1);
+                    double scoreGap = champion.meanScore() - runnerUp.meanScore();
+                    double coopGap = champion.meanCooperationRate() - runnerUp.meanCooperationRate();
                     paragraphs.add(String.format(
-                            "- 冠军比亚军场均多拿 %.2f 分、合作率高出 %.1f 个百分点，是“先友善→立刻惩罚→快速复原”的最佳注脚。",
-                            champion.meanScore() - runnerUp.meanScore(),
-                            (champion.meanCooperationRate() - runnerUp.meanCooperationRate()) * 100
+                            "- 冠军比亚军场均多拿 %.2f 分，合作率%s %.1f 个百分点——宽容版以牙还牙虽然没那么“乖”，却用迅速修复赢下长期收益。",
+                            scoreGap,
+                            coopGap >= 0 ? "高出" : "低于",
+                            Math.abs(coopGap) * 100
                     ));
                 }
                 AgentPerformance underdog = agentRankings.get(agentRankings.size() - 1);
@@ -181,10 +192,10 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
             }
 
             if (!strategyRankings.isEmpty()) {
-                paragraphs.add("### 策略阵营风向");
+                paragraphs.add("### 阵营风向：整队复制就能用的策略模版");
                 StrategyPerformance topStrategy = strategyRankings.get(0);
                 paragraphs.add(String.format(
-                        "- 冠军阵营 %s：每轮平均 %.3f 分，合作率 %.1f%%，互惠率 %.1f%%，标准差 %.2f。",
+                        "- 冠军阵营 %s：每轮平均 %.3f 分，合作率 %.1f%%，互惠率 %.1f%%，标准差 %.2f，适合作为“默认协作协议”。",
                         topStrategy.strategy().displayName(),
                         topStrategy.meanScorePerRound(settings.rounds()),
                         topStrategy.meanCooperationRate() * 100,
@@ -193,7 +204,7 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
                 ));
                 StrategyPerformance bottomStrategy = strategyRankings.get(strategyRankings.size() - 1);
                 paragraphs.add(String.format(
-                        "- 末位阵营 %s：合作率只有 %.1f%%，说明“只惩罚不复原”的套路在噪声环境里最容易崩。",
+                        "- 末位阵营 %s：合作率只有 %.1f%%，说明“只惩罚不复原”的套路在噪声环境里最容易崩，适合写成失败案例。",
                         bottomStrategy.strategy().displayName(),
                         bottomStrategy.meanCooperationRate() * 100
                 ));
@@ -208,30 +219,31 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
                     .average()
                     .orElse(0.0);
 
-            paragraphs.add("### 三个现实启示");
+            paragraphs.add("### 将数字转成读者关心的意义");
             paragraphs.add(String.format(
-                    "- 总平均合作率 %.1f%%，说明只要允许快速修复，合作就能在随机搭子里坐稳半壁江山。",
+                    "- 总平均合作率 %.1f%%，告诉我们“信任＋可追责＋快速修复”是随机团队的最低配置。",
                     averageCooperationRate * 100
             ));
             if (!strategyRankings.isEmpty()) {
                 StrategyPerformance topStrategy = strategyRankings.get(0);
                 paragraphs.add(String.format(
-                        "- 宽容型冠军 %s 把“犯错后给台阶”写进流程，是团队制度里最值得抄的玩法。",
+                        "- 宽容型冠军 %s 提供了完整的节奏：先给善意、发现背刺立刻反击、随后抛橄榄枝。",
                         topStrategy.strategy().displayName()
                 ));
             }
             paragraphs.add(String.format(
-                    "- 平均互惠率 %.1f%%，比单纯的合作率更能打，告诉我们“对话机制”比“单向善意”重要得多。",
+                    "- 平均互惠率 %.1f%%，比单向合作更重要——适合引出团队复盘、OKR 共建或“周四检讨会”这些组织场景。",
                     averageMutualRate * 100
             ));
 
-            paragraphs.add("### 写稿小贴士");
-            paragraphs.add("- 用“冠军比亚军多拿多少分”开场，再贴前 3 名的柱状图，读者会立刻代入“职场策略赛”。");
-            paragraphs.add("- 把 1.5% 噪声翻译成“误操作率”，辅以真实案例，能自然过渡到团队容错话题。");
+            paragraphs.add("### 写稿小贴士（直接复制到排版里）");
+            paragraphs.add("- 开头抛“误操作率 1.5% 挤爆协作”这句冲突，再嵌入冠军 vs. 亚军得分图，读者立刻代入。");
+            paragraphs.add("- 中段用垫底角色做反面人物，穿插一则真实职场翻车案例，形成情绪共鸣。");
             paragraphs.add(String.format(
-                    "- 结尾抛出“平均互惠率 %.1f%%”这句金句，就能把伦理讨论拉回机制设计。",
+                    "- 结尾用“平均互惠率 %.1f%% 说明对话机制比单向善意更重要”收束，顺带引导读者留言分享处理冲突的经验。",
                     averageMutualRate * 100
             ));
+            paragraphs.add("- 想要多稿拆分？冠军策略写成正面案例、永远背叛写成避坑指南，再加一篇管理者操作手册即可。");
 
             return paragraphs;
         }

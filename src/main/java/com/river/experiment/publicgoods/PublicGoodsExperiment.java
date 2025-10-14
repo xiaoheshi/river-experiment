@@ -116,70 +116,70 @@ public final class PublicGoodsExperiment implements Experiment<PublicGoodsExperi
                     parameters.generations()
             ));
 
-            paragraphs.add("### 实验参数亮点");
+            paragraphs.add("### 爆款开头：给社区服务加一个“退出键”，合作率反而更稳？");
             paragraphs.add(String.format(
-                    "- 小组规模 %d 人，公共乘数 r=%.1f，合作者成本 %.1f，旁观者保底收益 %.1f。",
-                    parameters.groupSize(),
+                    "我们在一个 %d 人小组的公共物品博弈里，给参与者增加“随时退出拿保底收益”的选项。结果显示：只要退出机制设计得当，搭便车会自己缩回去。这套剧情非常适合写社区治理、志愿服务或企业文化案例。",
+                    parameters.groupSize()
+            ));
+
+            paragraphs.add("### 痛点排序，引导共鸣");
+            paragraphs.add("- 社区活动靠少数热心人撑，其他人旁观甚至搭便车。");
+            paragraphs.add("- 企业在内部协作中想推“保底奖励”，担心反而削弱合作。");
+            paragraphs.add("- 政策号、公益号需要“柔性治理”与“退出机制”的实证案例。");
+
+            paragraphs.add("### 仿真舞台：确保读者听得懂也信得过");
+            paragraphs.add(String.format("- 参数设定：公共乘数 r=%.1f，合作者成本 %.1f，旁观者保底收益 %.1f。",
                     parameters.multiplier(),
                     parameters.contributionCost(),
-                    parameters.lonerPayoff()
-            ));
-            paragraphs.add(String.format(
-                    "- 初始占比：合作者 %.1f%%、搭便车者 %.1f%%、旁观者 %.1f%%；复制强度 %.2f，突变率 %.2f。",
+                    parameters.lonerPayoff()));
+            paragraphs.add(String.format("- 起跑线：合作者 %.1f%%、搭便车者 %.1f%%、旁观者 %.1f%%；复制强度 %.2f，突变率 %.3f。",
                     percentage(parameters.initialCooperatorShare()),
                     percentage(parameters.initialDefectorShare()),
                     percentage(initialLoner),
                     parameters.selectionStrength(),
-                    parameters.mutationRate()
-            ));
-            paragraphs.add(String.format(
-                    "- 共运行 %d 代、每代 %d 次随机匹配，种子 %d 保证结果可复现。",
+                    parameters.mutationRate()));
+            paragraphs.add(String.format("- 仿真规模：共 %d 代、每代 %d 次随机匹配，随机种子 %d，确保别人复现得到同样结果。",
                     parameters.generations(),
                     parameters.interactionsPerGeneration(),
-                    parameters.seed()
-            ));
+                    parameters.seed()));
 
-            paragraphs.add("### 数据转折点");
-            paragraphs.add(String.format(
-                    "- 平均收益 %.2f → %.2f，证明退出机制没有拖累整体回报。",
+            paragraphs.add("### 数据高潮：三条曲线讲完故事");
+            paragraphs.add(String.format("- 平均收益 %.2f → %.2f，说明退出机制没有摧毁整体回报，反而更稳定。",
                     first.populationPayoff(),
-                    last.populationPayoff()
-            ));
-            paragraphs.add(String.format(
-                    "- 合作者稳态 %.1f%%、旁观者抬升到 %.1f%%，搭便车者被压到 %.1f%%。",
+                    last.populationPayoff()));
+            paragraphs.add(String.format("- 合作者稳住在 %.1f%%，旁观者攀升到 %.1f%%，搭便车者被压到 %.1f%%，形成“合作—旁观”双引擎。",
                     percentage(last.cooperatorShare()),
                     percentage(last.lonerShare()),
-                    percentage(last.defectorShare())
-            ));
+                    percentage(last.defectorShare())));
             String suppressionText = suppressionGeneration >= 0
                     ? "第 " + suppressionGeneration + " 代"
                     : "模拟范围内尚未触达";
             paragraphs.add(String.format(
-                    "- %s 让搭便车比例跌破 20%%；合作峰值出现在第 %d 代（%.1f%%）。",
+                    "- %s 让搭便车跌破 20%%；合作峰值出现在第 %d 代（%.1f%%），适合作为图文的情绪拐点。",
                     suppressionText,
                     peak.generation(),
                     percentage(peak.cooperatorShare())
             ));
 
-            paragraphs.add("### 三条现实启示");
+            paragraphs.add("### 把数字翻成现实建议");
             paragraphs.add(String.format(
-                    "- 搭便车者收益 %.2f 被旁观者的保底 %.1f 挤压，退出选项比高压惩罚更快见效。",
+                    "- 搭便车者收益 %.2f 被保底收益 %.1f“锁死”，退出选项比高压惩罚更快见效，可类比“社区记点”“志愿时薪”。",
                     last.defectorPayoff(),
                     parameters.lonerPayoff()
             ));
             paragraphs.add(String.format(
-                    "- 合作者最终仍拿到 %.2f 的群体收益，说明“愿意出力的人”不会被退出机制伤害。",
+                    "- 合作者最终仍拿到 %.2f 的群体收益，证明“愿意出力的人”享受到更大整体蛋糕，不会被退出机制伤害。",
                     last.cooperatorPayoff()
             ));
-            paragraphs.add("- 旁观者维持在约一半，是“软治理”里可复用的缓冲层：提供保底，不让群体崩盘。");
+            paragraphs.add("- 旁观者稳定在 40%~50%，是“软治理”里的安全垫：提供保底，不让群体瞬间崩盘。");
 
-            paragraphs.add("### 写稿小贴士");
-            paragraphs.add("- 先讲“给公共项目一个退出键”，再贴合作者/搭便车/旁观者三线图，读者会自动代入社区案例。");
+            paragraphs.add("### 写稿与排版提示");
+            paragraphs.add("- 用“退出按钮居然能压住搭便车？”做开头悬念，配三线图，读者立刻代入社区故事。");
             paragraphs.add(String.format(
-                    "- 用“%s 让搭便车跌破 20%%”作为金句过渡到制度设计，故事自然顺滑。",
+                    "- 用“%s 让搭便车跌破 20%%”当金句，顺势切到制度设计或政策提案。",
                     suppressionText
             ));
-            paragraphs.add("- 结尾提示：参数都能改，换成志愿服务或会员积分场景，文章立刻可复用。");
+            paragraphs.add("- 结尾提示参数可调，鼓励读者留言分享自己参与的志愿服务或积分制度案例。");
             return paragraphs;
         }
 
