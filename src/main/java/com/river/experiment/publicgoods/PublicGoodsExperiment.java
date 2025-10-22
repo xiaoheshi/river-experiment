@@ -213,32 +213,32 @@ public final class PublicGoodsExperiment implements Experiment<PublicGoodsExperi
             return List.of(
                     new ChartAttachment(
                             "strategy-share.png",
-                            "策略占比演化",
-                            "代数",
-                            "占比（%）",
+                            "Strategy Share Over Generations",
+                            "Generation",
+                            "Share (%)",
                             List.of(
-                                    ChartSeries.of("合作者", generationIndex, cooperatorShare),
-                                    ChartSeries.of("搭便车者", generationIndex, defectorShare),
-                                    ChartSeries.of("旁观者", generationIndex, lonerShare)
+                                    ChartSeries.of("Cooperator Share", generationIndex, cooperatorShare),
+                                    ChartSeries.of("Defector Share", generationIndex, defectorShare),
+                                    ChartSeries.of("Loner Share", generationIndex, lonerShare)
                             )
                     ),
                     new ChartAttachment(
                             "strategy-payoff.png",
-                            "策略收益对比",
-                            "代数",
-                            "平均收益",
+                            "Average Payoff by Strategy",
+                            "Generation",
+                            "Average Payoff",
                             List.of(
-                                    ChartSeries.of("合作者收益", generationIndex, cooperatorPayoff),
-                                    ChartSeries.of("搭便车者收益", generationIndex, defectorPayoff),
-                                    ChartSeries.of("旁观者收益", generationIndex, lonerPayoff)
+                                    ChartSeries.of("Cooperator Payoff", generationIndex, cooperatorPayoff),
+                                    ChartSeries.of("Defector Payoff", generationIndex, defectorPayoff),
+                                    ChartSeries.of("Loner Payoff", generationIndex, lonerPayoff)
                             )
                     ),
                     new ChartAttachment(
                             "population-payoff.png",
-                            "群体平均收益",
-                            "代数",
-                            "平均收益",
-                            List.of(ChartSeries.of("平均收益", generationIndex, populationPayoff))
+                            "Population Average Payoff",
+                            "Generation",
+                            "Average Payoff",
+                            List.of(ChartSeries.of("Average Payoff", generationIndex, populationPayoff))
                     )
             );
         }

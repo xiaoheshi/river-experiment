@@ -56,9 +56,9 @@
 
 - 想要多稿拆分？冠军策略写成正面案例、永远背叛写成避坑指南，再加一篇管理者操作手册即可。
 
-![策略排名与场均得分](assets/cooperation-tournament/strategy-score-per-round.png)
+![Average Score per Round by Strategy Rank](assets/cooperation-tournament/strategy-score-per-round.png)
 
-![策略合作率走势](assets/cooperation-tournament/strategy-cooperation-rate.png)
+![Cooperation Rate by Strategy Rank](assets/cooperation-tournament/strategy-cooperation-rate.png)
 
-![角色得分分布](assets/cooperation-tournament/agent-score.png)
+![Agent Score Distribution](assets/cooperation-tournament/agent-score.png)
 

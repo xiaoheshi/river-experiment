@@ -276,24 +276,24 @@ public final class CooperationExperiment implements Experiment<CooperationExperi
             return List.of(
                     new ChartAttachment(
                             "strategy-score-per-round.png",
-                            "策略排名与场均得分",
-                            "策略排名",
-                            "场均得分",
-                            List.of(ChartSeries.of("场均得分", strategyRankIndex, meanScorePerRound))
+                            "Average Score per Round by Strategy Rank",
+                            "Strategy Rank",
+                            "Average Score per Round",
+                            List.of(ChartSeries.of("Average Score per Round", strategyRankIndex, meanScorePerRound))
                     ),
                     new ChartAttachment(
                             "strategy-cooperation-rate.png",
-                            "策略合作率走势",
-                            "策略排名",
-                            "合作率（%）",
-                            List.of(ChartSeries.of("平均合作率", strategyRankIndex, cooperationRate))
+                            "Cooperation Rate by Strategy Rank",
+                            "Strategy Rank",
+                            "Cooperation Rate (%)",
+                            List.of(ChartSeries.of("Average Cooperation Rate", strategyRankIndex, cooperationRate))
                     ),
                     new ChartAttachment(
                             "agent-score.png",
-                            "角色得分分布",
-                            "角色排名",
-                            "累计得分",
-                            List.of(ChartSeries.of("累计得分", agentRankIndex, agentScore))
+                            "Agent Score Distribution",
+                            "Agent Rank",
+                            "Total Score",
+                            List.of(ChartSeries.of("Total Score", agentRankIndex, agentScore))
                     )
             );
         }

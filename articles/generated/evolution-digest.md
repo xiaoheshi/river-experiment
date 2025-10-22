@@ -64,11 +64,11 @@
 
 - 想要多稿拆分？冠军策略写成正面案例、永远背叛写成避坑指南，再加一篇管理者操作手册即可。
 
-![策略排名与场均得分](assets/cooperation-tournament/strategy-score-per-round.png)
+![Average Score per Round by Strategy Rank](assets/cooperation-tournament/strategy-score-per-round.png)
 
-![策略合作率走势](assets/cooperation-tournament/strategy-cooperation-rate.png)
+![Cooperation Rate by Strategy Rank](assets/cooperation-tournament/strategy-cooperation-rate.png)
 
-![角色得分分布](assets/cooperation-tournament/agent-score.png)
+![Agent Score Distribution](assets/cooperation-tournament/agent-score.png)
 
 ## 亲缘选择：1000 代演化揭开家庭互助的底层逻辑
 
@@ -118,11 +118,11 @@
 
 - 结尾抛出“我们能否设计出让陌生人也愿意互助的制度？”鼓励读者留言。
 
-![利他者与自私者占比变化](assets/kin-selection/strategy-share.png)
+![Strategy Share Over Generations](assets/kin-selection/strategy-share.png)
 
-![包容适合度对比](assets/kin-selection/inclusive-fitness.png)
+![Inclusive Fitness Comparison](assets/kin-selection/inclusive-fitness.png)
 
-![直接适合度对比](assets/kin-selection/direct-fitness.png)
+![Direct Fitness Comparison](assets/kin-selection/direct-fitness.png)
 
 ## 价格战越打越穷：鹰鸽模型的混合均衡警报
 
@@ -174,11 +174,11 @@
 
 - 结尾把行业案例（直播带货、房产促销、红包大战）与模型对照，加一句“你们行业的均衡点是多少？”引导留言。
 
-![鹰派与鸽派占比演化](assets/hawk-dove/strategy-share.png)
+![Strategy Share Over Generations](assets/hawk-dove/strategy-share.png)
 
-![策略收益对比](assets/hawk-dove/strategy-payoff.png)
+![Average Payoff by Strategy](assets/hawk-dove/strategy-payoff.png)
 
-![群体平均收益](assets/hawk-dove/average-payoff.png)
+![Population Average Payoff](assets/hawk-dove/average-payoff.png)
 
 ## 公共物品：一个退出按钮压住搭便车
 
@@ -230,11 +230,11 @@
 
 - 结尾提示参数可调，鼓励读者留言分享自己参与的志愿服务或积分制度案例。
 
-![策略占比演化](assets/public-goods/strategy-share.png)
+![Strategy Share Over Generations](assets/public-goods/strategy-share.png)
 
-![策略收益对比](assets/public-goods/strategy-payoff.png)
+![Average Payoff by Strategy](assets/public-goods/strategy-payoff.png)
 
-![群体平均收益](assets/public-goods/population-payoff.png)
+![Population Average Payoff](assets/public-goods/population-payoff.png)
 
 ## 鹿猎信号：12% 破局者把团队拖进高配局
 
@@ -284,9 +284,9 @@
 
 - 追加彩蛋：把初始信号者比例调到 5% 再跑一次，做成留言互动的读者作业。
 
-![信号者带动的策略占比演化](assets/stag-hunt-signal/strategy-share.png)
+![Strategy Share Over Generations](assets/stag-hunt-signal/strategy-share.png)
 
-![各策略平均收益对比](assets/stag-hunt-signal/strategy-payoff.png)
+![Average Payoff by Strategy](assets/stag-hunt-signal/strategy-payoff.png)
 
-![信号触发与协作成功率](assets/stag-hunt-signal/coordination-rates.png)
+![Signal and Coordination Rates](assets/stag-hunt-signal/coordination-rates.png)
 

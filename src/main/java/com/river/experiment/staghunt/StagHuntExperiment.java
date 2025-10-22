@@ -267,36 +267,36 @@ public final class StagHuntExperiment implements Experiment<StagHuntExperiment.S
             return List.of(
                     new ChartAttachment(
                             "strategy-share.png",
-                            "信号者带动的策略占比演化",
-                            "代数",
-                            "占比（%）",
+                            "Strategy Share Over Generations",
+                            "Generation",
+                            "Share (%)",
                             List.of(
-                                    ChartSeries.of("信号者", generationIndex, signalerShare),
-                                    ChartSeries.of("跟随者", generationIndex, followerShare),
-                                    ChartSeries.of("保守者", generationIndex, lonerShare)
+                                    ChartSeries.of("Signaler Share", generationIndex, signalerShare),
+                                    ChartSeries.of("Follower Share", generationIndex, followerShare),
+                                    ChartSeries.of("Loner Share", generationIndex, lonerShare)
                             )
                     ),
                     new ChartAttachment(
                             "strategy-payoff.png",
-                            "各策略平均收益对比",
-                            "代数",
-                            "平均收益",
+                            "Average Payoff by Strategy",
+                            "Generation",
+                            "Average Payoff",
                             List.of(
-                                    ChartSeries.of("信号者收益", generationIndex, signalerPayoff),
-                                    ChartSeries.of("跟随者收益", generationIndex, followerPayoff),
-                                    ChartSeries.of("保守者收益", generationIndex, lonerPayoff),
-                                    ChartSeries.of("群体收益", generationIndex, populationPayoff)
+                                    ChartSeries.of("Signaler Payoff", generationIndex, signalerPayoff),
+                                    ChartSeries.of("Follower Payoff", generationIndex, followerPayoff),
+                                    ChartSeries.of("Loner Payoff", generationIndex, lonerPayoff),
+                                    ChartSeries.of("Population Payoff", generationIndex, populationPayoff)
                             )
                     ),
                     new ChartAttachment(
                             "coordination-rates.png",
-                            "信号触发与协作成功率",
-                            "代数",
-                            "占比（%）",
+                            "Signal and Coordination Rates",
+                            "Generation",
+                            "Rate (%)",
                             List.of(
-                                    ChartSeries.of("信号触发率", generationIndex, signalActivationRate),
-                                    ChartSeries.of("鹿猎协作成功率", generationIndex, stagSuccessRate),
-                                    ChartSeries.of("信号转化率", generationIndex, stagConversionRate)
+                                    ChartSeries.of("Signal Activation Rate", generationIndex, signalActivationRate),
+                                    ChartSeries.of("Stag Success Rate", generationIndex, stagSuccessRate),
+                                    ChartSeries.of("Signal Conversion Rate", generationIndex, stagConversionRate)
                             )
                     )
             );

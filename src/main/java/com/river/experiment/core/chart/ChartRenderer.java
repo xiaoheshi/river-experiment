@@ -115,19 +115,19 @@ public final class ChartRenderer {
         // 起点注释
         double startX = series.xValues()[0];
         double startY = series.yValues()[0];
-        chart.addAnnotation(createAnnotation("起点 " + formatValue(startY), startX, startY, true));
+        chart.addAnnotation(createAnnotation("Start " + formatValue(startY), startX, startY, true));
 
         // 峰值注释
         int maxIndex = maxIndex(series.yValues());
         double maxX = series.xValues()[maxIndex];
         double maxY = series.yValues()[maxIndex];
-        chart.addAnnotation(createAnnotation("峰值 " + formatValue(maxY), maxX, maxY, false));
+        chart.addAnnotation(createAnnotation("Peak " + formatValue(maxY), maxX, maxY, false));
 
         // 终点注释（若不同于峰值）
         double endX = series.xValues()[series.xValues().length - 1];
         double endY = series.yValues()[series.yValues().length - 1];
         if (Math.abs(endX - maxX) > 1e-6 || Math.abs(endY - maxY) > 1e-6) {
-            chart.addAnnotation(createAnnotation("最新 " + formatValue(endY), endX, endY, false));
+            chart.addAnnotation(createAnnotation("Latest " + formatValue(endY), endX, endY, false));
         }
     }
 

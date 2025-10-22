@@ -44,9 +44,9 @@
 
 - 追加彩蛋：把初始信号者比例调到 5% 再跑一次，做成留言互动的读者作业。
 
-![信号者带动的策略占比演化](assets/stag-hunt-signal/strategy-share.png)
+![Strategy Share Over Generations](assets/stag-hunt-signal/strategy-share.png)
 
-![各策略平均收益对比](assets/stag-hunt-signal/strategy-payoff.png)
+![Average Payoff by Strategy](assets/stag-hunt-signal/strategy-payoff.png)
 
-![信号触发与协作成功率](assets/stag-hunt-signal/coordination-rates.png)
+![Signal and Coordination Rates](assets/stag-hunt-signal/coordination-rates.png)
 

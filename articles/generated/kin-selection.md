@@ -44,9 +44,9 @@
 
 - 结尾抛出“我们能否设计出让陌生人也愿意互助的制度？”鼓励读者留言。
 
-![利他者与自私者占比变化](assets/kin-selection/strategy-share.png)
+![Strategy Share Over Generations](assets/kin-selection/strategy-share.png)
 
-![包容适合度对比](assets/kin-selection/inclusive-fitness.png)
+![Inclusive Fitness Comparison](assets/kin-selection/inclusive-fitness.png)
 
-![直接适合度对比](assets/kin-selection/direct-fitness.png)
+![Direct Fitness Comparison](assets/kin-selection/direct-fitness.png)
 

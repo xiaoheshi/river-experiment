@@ -219,32 +219,32 @@ public final class KinSelectionExperiment implements Experiment<KinSelectionExpe
             return List.of(
                     new ChartAttachment(
                             "strategy-share.png",
-                            "利他者与自私者占比变化",
-                            "代数",
-                            "占比（%）",
+                            "Strategy Share Over Generations",
+                            "Generation",
+                            "Share (%)",
                             List.of(
-                                    ChartSeries.of("利他者占比", generationIndex, altruistShare),
-                                    ChartSeries.of("自私者占比", generationIndex, selfishShare)
+                                    ChartSeries.of("Altruist Share", generationIndex, altruistShare),
+                                    ChartSeries.of("Selfish Share", generationIndex, selfishShare)
                             )
                     ),
                     new ChartAttachment(
                             "inclusive-fitness.png",
-                            "包容适合度对比",
-                            "代数",
-                            "平均适合度",
+                            "Inclusive Fitness Comparison",
+                            "Generation",
+                            "Average Fitness",
                             List.of(
-                                    ChartSeries.of("利他者包容适合度", generationIndex, altruistInclusive),
-                                    ChartSeries.of("自私者包容适合度", generationIndex, selfishInclusive)
+                                    ChartSeries.of("Altruist Inclusive Fitness", generationIndex, altruistInclusive),
+                                    ChartSeries.of("Selfish Inclusive Fitness", generationIndex, selfishInclusive)
                             )
                     ),
                     new ChartAttachment(
                             "direct-fitness.png",
-                            "直接适合度对比",
-                            "代数",
-                            "平均适合度",
+                            "Direct Fitness Comparison",
+                            "Generation",
+                            "Average Fitness",
                             List.of(
-                                    ChartSeries.of("利他者直接适合度", generationIndex, altruistDirect),
-                                    ChartSeries.of("自私者直接适合度", generationIndex, selfishDirect)
+                                    ChartSeries.of("Altruist Direct Fitness", generationIndex, altruistDirect),
+                                    ChartSeries.of("Selfish Direct Fitness", generationIndex, selfishDirect)
                             )
                     )
             );

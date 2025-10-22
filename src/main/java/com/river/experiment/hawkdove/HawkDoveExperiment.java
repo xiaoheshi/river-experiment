@@ -216,31 +216,31 @@ public final class HawkDoveExperiment implements Experiment<HawkDoveExperiment.H
             return List.of(
                     new ChartAttachment(
                             "strategy-share.png",
-                            "鹰派与鸽派占比演化",
-                            "代数",
-                            "占比（%）",
+                            "Strategy Share Over Generations",
+                            "Generation",
+                            "Share (%)",
                             List.of(
-                                    ChartSeries.of("鹰派占比", generationIndex, hawkShareSeries),
-                                    ChartSeries.of("鸽派占比", generationIndex, doveShareSeries),
-                                    ChartSeries.of("理论均衡", generationIndex, essShareSeries)
+                                    ChartSeries.of("Hawk Share", generationIndex, hawkShareSeries),
+                                    ChartSeries.of("Dove Share", generationIndex, doveShareSeries),
+                                    ChartSeries.of("Theoretical ESS", generationIndex, essShareSeries)
                             )
                     ),
                     new ChartAttachment(
                             "strategy-payoff.png",
-                            "策略收益对比",
-                            "代数",
-                            "平均收益",
+                            "Average Payoff by Strategy",
+                            "Generation",
+                            "Average Payoff",
                             List.of(
-                                    ChartSeries.of("鹰派收益", generationIndex, hawkPayoffSeries),
-                                    ChartSeries.of("鸽派收益", generationIndex, dovePayoffSeries)
+                                    ChartSeries.of("Hawk Payoff", generationIndex, hawkPayoffSeries),
+                                    ChartSeries.of("Dove Payoff", generationIndex, dovePayoffSeries)
                             )
                     ),
                     new ChartAttachment(
                             "average-payoff.png",
-                            "群体平均收益",
-                            "代数",
-                            "平均收益",
-                            List.of(ChartSeries.of("平均收益", generationIndex, averagePayoffSeries))
+                            "Population Average Payoff",
+                            "Generation",
+                            "Average Payoff",
+                            List.of(ChartSeries.of("Average Payoff", generationIndex, averagePayoffSeries))
                     )
             );
         }

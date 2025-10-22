@@ -46,9 +46,9 @@
 
 - 结尾把行业案例（直播带货、房产促销、红包大战）与模型对照，加一句“你们行业的均衡点是多少？”引导留言。
 
-![鹰派与鸽派占比演化](assets/hawk-dove/strategy-share.png)
+![Strategy Share Over Generations](assets/hawk-dove/strategy-share.png)
 
-![策略收益对比](assets/hawk-dove/strategy-payoff.png)
+![Average Payoff by Strategy](assets/hawk-dove/strategy-payoff.png)
 
-![群体平均收益](assets/hawk-dove/average-payoff.png)
+![Population Average Payoff](assets/hawk-dove/average-payoff.png)
 

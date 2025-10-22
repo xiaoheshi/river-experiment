@@ -46,9 +46,9 @@
 
 - 结尾提示参数可调，鼓励读者留言分享自己参与的志愿服务或积分制度案例。
 
-![策略占比演化](assets/public-goods/strategy-share.png)
+![Strategy Share Over Generations](assets/public-goods/strategy-share.png)
 
-![策略收益对比](assets/public-goods/strategy-payoff.png)
+![Average Payoff by Strategy](assets/public-goods/strategy-payoff.png)
 
-![群体平均收益](assets/public-goods/population-payoff.png)
+![Population Average Payoff](assets/public-goods/population-payoff.png)
 
