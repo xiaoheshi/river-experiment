@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
@@ -66,6 +67,14 @@ public final class ChartRenderer {
     }
 
     private static void styleChart(XYChart chart) {
+        Font baseFont = ChartFontProvider.baseFont();
+        chart.getStyler().setBaseFont(baseFont);
+        chart.getStyler().setChartTitleFont(ChartFontProvider.titleFont());
+        chart.getStyler().setAxisTitleFont(ChartFontProvider.axisTitleFont());
+        chart.getStyler().setAxisTickLabelsFont(ChartFontProvider.axisLabelFont());
+        chart.getStyler().setLegendFont(ChartFontProvider.legendFont());
+        chart.getStyler().setAnnotationTextFont(ChartFontProvider.annotationFont());
+
         chart.getStyler().setChartBackgroundColor(Color.WHITE);
         chart.getStyler().setPlotBackgroundColor(new Color(248, 249, 252));
         chart.getStyler().setLegendVisible(true);
