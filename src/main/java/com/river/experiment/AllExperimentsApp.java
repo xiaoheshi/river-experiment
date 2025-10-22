@@ -9,6 +9,7 @@ import com.river.experiment.core.ExperimentReport;
 import com.river.experiment.core.article.ArticleExportResult;
 import com.river.experiment.core.article.MarkdownArticleWriter;
 import com.river.experiment.core.chart.ChartAttachment;
+import com.river.experiment.staghunt.StagHuntExperiment;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -77,6 +78,24 @@ public final class AllExperimentsApp {
         );
         runAndCollect(publicGoodsExperiment, entries);
 
+        StagHuntExperiment stagHuntExperiment = new StagHuntExperiment(
+                new com.river.experiment.staghunt.StagHuntParameters(
+                        240,
+                        7500,
+                        0.72,
+                        0.018,
+                        5.0,
+                        2.0,
+                        0.0,
+                        0.8,
+                        0.12,
+                        0.58,
+                        0.30,
+                        2028L
+                )
+        );
+        runAndCollect(stagHuntExperiment, entries);
+
         try {
             Path digestPath = writeDigest(entries);
             System.out.println();
@@ -113,7 +132,7 @@ public final class AllExperimentsApp {
             writer.write("# 演化合作爆款素材库");
             writer.newLine();
             writer.newLine();
-            writer.write("这是一键跑完四个演化实验后的“公众号素材套餐”：直接带上数据、图表与写作提示，帮你从家庭互助讲到价格战和公共物品。");
+            writer.write("这是一键跑完五个演化实验后的“公众号素材套餐”：直接带上数据、图表与写作提示，帮你从家庭互助讲到价格战、公共物品与协调破局。");
             writer.newLine();
             writer.newLine();
             writer.write("使用方法很简单：每段保留核心叙事，挑选适合的图表，就能组合成一篇爆款潜质文章或多篇专题稿。");
